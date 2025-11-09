@@ -1,6 +1,5 @@
-import os
 from prettytable import PrettyTable
-from colorama import Fore, Style
+from utils import clear, header, info, warning
 
 mobil_list = {
     "KT1234AA": {"nama": "Toyota Alphard", "harga": 1500000, "status": "Tersedia"},
@@ -10,12 +9,9 @@ mobil_list = {
     "KU9999EE": {"nama": "Porsche Cayenne", "harga": 3000000, "status": "Tersedia"}
 }
 
-def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
 def lihat_mobil():
     clear()
-    print(Fore.CYAN + "=== DAFTAR MOBIL ===\n" + Style.RESET_ALL)
+    header("DAFTAR MOBIL TERSEDIA")
     table = PrettyTable()
     table.field_names = ["Plat", "Nama Mobil", "Harga Sewa (Rp)", "Status"]
     for plat, data in mobil_list.items():
@@ -25,28 +21,28 @@ def lihat_mobil():
 
 def tambah_mobil():
     clear()
-    print(Fore.GREEN + "=== TAMBAH MOBIL BARU ===" + Style.RESET_ALL)
-    plat = input("Plat mobil (misal KT8888XX): ").upper().strip()
+    header("TAMBAH MOBIL BARU")
+    plat = input("Plat mobil: ").upper().strip()
     if plat in mobil_list:
-        print(Fore.RED + "Plat sudah terdaftar!" + Style.RESET_ALL)
+        warning("Plat sudah terdaftar!")
     else:
         nama = input("Nama mobil: ").strip()
         harga = input("Harga sewa per hari: ").strip()
         if not harga.isdigit():
-            print(Fore.RED + "Harga harus berupa angka!" + Style.RESET_ALL)
+            warning("Harga harus berupa angka!")
         else:
             mobil_list[plat] = {"nama": nama, "harga": int(harga), "status": "Tersedia"}
-            print(Fore.GREEN + "Mobil berhasil ditambahkan!" + Style.RESET_ALL)
+            info("Mobil berhasil ditambahkan!")
     input("Tekan Enter untuk kembali...")
 
 def update_mobil():
     clear()
+    header("UPDATE DATA MOBIL")
     lihat_mobil()
-    print(Fore.YELLOW + "\n=== UPDATE DATA MOBIL ===" + Style.RESET_ALL)
-    plat_update = input("Masukkan plat mobil: ").upper().strip()
+    plat_update = input("Plat mobil yang ingin diupdate: ").upper().strip()
 
     if plat_update not in mobil_list:
-        print(Fore.RED + "Plat tidak ditemukan!" + Style.RESET_ALL)
+        warning("Plat tidak ditemukan!")
     else:
         nama_baru = input("Nama baru (kosong = tidak ubah): ").strip()
         harga_baru = input("Harga baru (kosong = tidak ubah): ").strip()
@@ -59,21 +55,21 @@ def update_mobil():
         if status_baru in ["Tersedia", "Disewa"]:
             mobil_list[plat_update]["status"] = status_baru
 
-        print(Fore.GREEN + "Data mobil berhasil diperbarui!" + Style.RESET_ALL)
-    input("Tekan Enter untuk kembali...")
+        info("Data mobil berhasil diperbarui!")
+    input("Tekan Enter...")
 
 def hapus_mobil():
     clear()
+    header("HAPUS MOBIL")
     lihat_mobil()
-    print(Fore.RED + "\n=== HAPUS MOBIL ===" + Style.RESET_ALL)
-    plat_hapus = input("Masukkan plat mobil yang ingin dihapus: ").upper().strip()
+    plat_hapus = input("Plat mobil yang ingin dihapus: ").upper().strip()
     if plat_hapus in mobil_list:
         konfirmasi = input(f"Yakin ingin menghapus {plat_hapus}? (y/n): ").lower()
         if konfirmasi == "y":
             del mobil_list[plat_hapus]
-            print(Fore.GREEN + "Mobil berhasil dihapus!" + Style.RESET_ALL)
+            info("Mobil berhasil dihapus!")
         else:
-            print("Dibatalkan.")
+            warning("Dibatalkan.")
     else:
-        print(Fore.RED + "Plat tidak ditemukan!" + Style.RESET_ALL)
-    input("Tekan Enter untuk kembali...")
+        warning("Plat tidak ditemukan!")
+    input("Tekan Enter...")
